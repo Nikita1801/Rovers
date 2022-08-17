@@ -7,14 +7,10 @@
 
 import UIKit
 
-protocol SettingsDelegate: AnyObject{
-    func fetchSelectedRover(selectedRoverName: String)
-}
+
 
 final class MainViewController: UIViewController {
     
-    // Delete later
-//    let camsNames = ["FHAZ", "NAVCAM", "PANCAM", "RHAZ"]
     var camsInfoArray: [RoverModel?] = []
     var camsNames: [String] = [""]
     
@@ -27,8 +23,8 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        roverManager.roversArraydelegate = self
-        settingsViewController.roverDelegate = self
+        roverManager.roversArrayDelegate = self
+        settingsViewController.roverDelegate = self as! SettingsDelegate
         
         roverManager.fetchURL(roverName: selectedRover, earthDate: "2022-8-10")
         
@@ -39,9 +35,9 @@ final class MainViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         if isViewDidLoad{
             roverManager.fetchURL(roverName: selectedRover, earthDate: "2022-8-10")
+            camsTableView.reloadData()
         }
         print(selectedRover)
-        print(camsInfoArray)
         
     }
     
@@ -109,7 +105,8 @@ final class MainViewController: UIViewController {
             camsNames.append(roverInfo?.cameraName ?? "")
         }
         camsNames = Array(Set(camsNames)).sorted()
-        camsNames.removeFirst()
+//        camsNames.removeFirst()
+        camsNames = camsNames.filter{$0 != ""}
         
         print("______________________________\(camsNames)")
     }
@@ -193,7 +190,7 @@ extension MainViewController: SettingsDelegate{
     
     func fetchSelectedRover(selectedRoverName: String) {
         selectedRover = selectedRoverName
-        print("Fix later\(selectedRover)")    // FIX THIS DELEGATE
+        print("Fix later\(selectedRover)----_______-----_____")    // FIX THIS DELEGATE
     }
 }
 

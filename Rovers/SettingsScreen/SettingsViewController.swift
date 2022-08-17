@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol SettingsDelegate: AnyObject{
+    func fetchSelectedRover(selectedRoverName: String)
+}
+
 final class SettingsViewController: UIViewController {
     
     weak var roverDelegate: SettingsDelegate?
@@ -26,6 +30,7 @@ final class SettingsViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         //print(selectedRover)
+        
         
     }
     func configureTableView(){
@@ -79,8 +84,10 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //roverTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        
         roverTableView.cellForRow(at: indexPath)?.accessoryView?.isHidden = false
         selectedRover = rovers[indexPath.row]
+        print(selectedRover)
         print(roverDelegate?.fetchSelectedRover(selectedRoverName: selectedRover))
         
     }
@@ -88,6 +95,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         //roverTableView.cellForRow(at: indexPath)?.accessoryType = .none
         roverTableView.cellForRow(at: indexPath)?.accessoryView?.isHidden = true
+        
     }
     
 }

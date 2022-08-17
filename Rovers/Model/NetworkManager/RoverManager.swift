@@ -13,7 +13,7 @@ protocol RoverManagerDelegate{
 
 final class RoverManager{
     // https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?&earth_date=2022-8-10&api_key=Uls3MlNWdgwJ9Vzmw8kXbdUdvRixsSz72ulUD3AL
-    var roversArraydelegate: RoverManagerDelegate?
+    var roversArrayDelegate: RoverManagerDelegate?
     let nasaURL = "https://api.nasa.gov/mars-photos/api/v1/rovers/"
     let apiKey = "Uls3MlNWdgwJ9Vzmw8kXbdUdvRixsSz72ulUD3AL"
     
@@ -34,7 +34,7 @@ final class RoverManager{
                 if let safeData = data{
                     let roverInfo = self.parseJSON(safeData)
                     // delegate updateUI
-                    self.roversArraydelegate?.didUpdateRoverInfo(self, roversArray: roverInfo)
+                    self.roversArrayDelegate?.didUpdateRoverInfo(self, roversArray: roverInfo)
                     //print(roverInfo)
                 }
             }
