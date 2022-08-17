@@ -13,7 +13,7 @@ final class SettingsViewController: UIViewController {
     
     let rovers = ["Spirit", "Opportunity","Curiosity", "Perseverance"]
     var roverTableView = UITableView()
-    var selectedRover = "Spirit"
+    var selectedRover = "Curiosity"
 
     override func viewDidLoad() {
         super.viewDidLoad()

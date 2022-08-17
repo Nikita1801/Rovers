@@ -13,25 +13,36 @@ protocol SettingsDelegate: AnyObject{
 
 final class MainViewController: UIViewController {
     
+    // Delete later
+//    let camsNames = ["FHAZ", "NAVCAM", "PANCAM", "RHAZ"]
+    var camsInfoArray: [RoverModel?] = []
+    var camsNames: [String] = [""]
+    
     var roverManager = RoverManager()
     var settingsViewController = SettingsViewController()
     var camsTableView = UITableView()
-    var selectedRover = "Spirit"
+    var selectedRover = "Curiosity"
+    var isViewDidLoad = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        roverManager.roversArraydelegate = self
+        settingsViewController.roverDelegate = self
+        
+        roverManager.fetchURL(roverName: selectedRover, earthDate: "2022-8-10")
         
         view.backgroundColor = .white
-        configureTableView()
-        configureView()
+        isViewDidLoad = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
-        settingsViewController.roverDelegate = self
-        roverManager.fetchURL(roverName: selectedRover, earthDate: "2022-8-10")
+        if isViewDidLoad{
+            roverManager.fetchURL(roverName: selectedRover, earthDate: "2022-8-10")
+        }
         print(selectedRover)
+        print(camsInfoArray)
+        
     }
     
     
@@ -82,9 +93,8 @@ final class MainViewController: UIViewController {
     }
     
     func configureTableView(){
-        view.addSubview(camsTableView)
         setTableViewDelegates()
-        camsTableView.register(RoverTableViewCell.self, forCellReuseIdentifier: "camscell")
+        camsTableView.register(CamsTableViewCell.self, forCellReuseIdentifier: "camscell")
         camsTableView.rowHeight = 160
         
     }
@@ -94,15 +104,29 @@ final class MainViewController: UIViewController {
         camsTableView.dataSource = self
     }
     
+    func getCamNamesWithoutDuplicates(){
+        for roverInfo in camsInfoArray {
+            camsNames.append(roverInfo?.cameraName ?? "")
+        }
+        camsNames = Array(Set(camsNames)).sorted()
+        camsNames.removeFirst()
+        
+        print("______________________________\(camsNames)")
+    }
+    
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        1
+        
+        
+        return camsNames.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = camsTableView.dequeueReusableCell(withIdentifier: "camscell") as! CamsTableViewCell
+        let camName = camsNames[indexPath.row]
+        cell.set(camName: camName)
         
         return cell
     }
@@ -119,6 +143,7 @@ private extension MainViewController{
         horizontalStackView.addSubview(leftArrowButton)
         horizontalStackView.addSubview(rightArrowButton)
         view.addSubview(horizontalStackView)
+        view.addSubview(camsTableView)
         
         setConstraints()
     }
@@ -129,30 +154,37 @@ private extension MainViewController{
         roverName.translatesAutoresizingMaskIntoConstraints = false
         leftArrowButton.translatesAutoresizingMaskIntoConstraints = false
         rightArrowButton.translatesAutoresizingMaskIntoConstraints = false
+        camsTableView.translatesAutoresizingMaskIntoConstraints = false
         
         
         NSLayoutConstraint.activate([
             dateLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 58),
             dateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             dateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            dateLabel.bottomAnchor.constraint(equalTo: horizontalStackView.topAnchor, constant: 8),
+            dateLabel.bottomAnchor.constraint(equalTo: horizontalStackView.topAnchor, constant: -8),
             
             horizontalStackView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor),
             horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+//            horizontalStackView.bottomAnchor.constraint(equalTo: camsTableView.topAnchor, constant: 60),
             
             roverName.topAnchor.constraint(equalTo: horizontalStackView.topAnchor),
             roverName.leadingAnchor.constraint(equalTo: horizontalStackView.leadingAnchor),
-            roverName.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
+//            roverName.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
             
             leftArrowButton.topAnchor.constraint(equalTo: horizontalStackView.topAnchor),
             leftArrowButton.trailingAnchor.constraint(equalTo: rightArrowButton.leadingAnchor, constant: 16),
-            leftArrowButton.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
+//            leftArrowButton.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
             
             rightArrowButton.topAnchor.constraint(equalTo: horizontalStackView.topAnchor),
             rightArrowButton.leadingAnchor.constraint(equalTo: leftArrowButton.trailingAnchor),
             rightArrowButton.trailingAnchor.constraint(equalTo: horizontalStackView.trailingAnchor),
-            rightArrowButton.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor)
+            rightArrowButton.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor, constant: -26),
+            
+            camsTableView.topAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
+            camsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            camsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            camsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }
@@ -161,7 +193,20 @@ extension MainViewController: SettingsDelegate{
     
     func fetchSelectedRover(selectedRoverName: String) {
         selectedRover = selectedRoverName
+        print("Fix later\(selectedRover)")    // FIX THIS DELEGATE
     }
-    
+}
+
+extension MainViewController: RoverManagerDelegate{
+    func didUpdateRoverInfo(_ roverManager: RoverManager, roversArray: [RoverModel?]) {
+        
+        camsInfoArray = roversArray
+        getCamNamesWithoutDuplicates()
+        
+        DispatchQueue.main.async {
+            self.configureTableView()
+            self.configureView()
+        }
+    }
     
 }

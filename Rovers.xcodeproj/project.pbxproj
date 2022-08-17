@@ -21,6 +21,7 @@
 		A73B88F928ABC19300ADB836 /* RoverModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73B88F828ABC19300ADB836 /* RoverModel.swift */; };
 		A73B88FB28ABC1C300ADB836 /* RoverData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73B88FA28ABC1C300ADB836 /* RoverData.swift */; };
 		A73B88FD28AD15F600ADB836 /* CamsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73B88FC28AD15F600ADB836 /* CamsTableViewCell.swift */; };
+		A73B890328AD2CC400ADB836 /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73B890228AD2CC400ADB836 /* PhotosCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		A73B88F828ABC19300ADB836 /* RoverModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoverModel.swift; sourceTree = "<group>"; };
 		A73B88FA28ABC1C300ADB836 /* RoverData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoverData.swift; sourceTree = "<group>"; };
 		A73B88FC28AD15F600ADB836 /* CamsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CamsTableViewCell.swift; sourceTree = "<group>"; };
+		A73B890228AD2CC400ADB836 /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 			children = (
 				A7217D9028AA7A2200CBB6B1 /* MainViewController.swift */,
 				A73B88FC28AD15F600ADB836 /* CamsTableViewCell.swift */,
+				A73B890228AD2CC400ADB836 /* PhotosCollectionViewCell.swift */,
 			);
 			path = MainScreen;
 			sourceTree = "<group>";
@@ -209,6 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A7217D8F28AA77E500CBB6B1 /* TabBarViewController.swift in Sources */,
+				A73B890328AD2CC400ADB836 /* PhotosCollectionViewCell.swift in Sources */,
 				A7217D9528AA7A4600CBB6B1 /* SettingsViewController.swift in Sources */,
 				A73B88F528ABA16800ADB836 /* RoverManager.swift in Sources */,
 				A7217D7B28AA767500CBB6B1 /* AppDelegate.swift in Sources */,
