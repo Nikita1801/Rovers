@@ -11,7 +11,7 @@ final class SettingsViewController: UIViewController {
     
     weak var roverDelegate: SettingsDelegate?
     
-    let rovers = ["Curiosity", "Spirit", "Opportunity", "Perseverance"]
+    let rovers = ["Spirit", "Opportunity","Curiosity", "Perseverance"]
     var roverTableView = UITableView()
     var selectedRover = "Spirit"
 

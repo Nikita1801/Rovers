@@ -20,6 +20,7 @@
 		A73B88F528ABA16800ADB836 /* RoverManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73B88F428ABA16800ADB836 /* RoverManager.swift */; };
 		A73B88F928ABC19300ADB836 /* RoverModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73B88F828ABC19300ADB836 /* RoverModel.swift */; };
 		A73B88FB28ABC1C300ADB836 /* RoverData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73B88FA28ABC1C300ADB836 /* RoverData.swift */; };
+		A73B88FD28AD15F600ADB836 /* CamsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73B88FC28AD15F600ADB836 /* CamsTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		A73B88F428ABA16800ADB836 /* RoverManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoverManager.swift; sourceTree = "<group>"; };
 		A73B88F828ABC19300ADB836 /* RoverModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoverModel.swift; sourceTree = "<group>"; };
 		A73B88FA28ABC1C300ADB836 /* RoverData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoverData.swift; sourceTree = "<group>"; };
+		A73B88FC28AD15F600ADB836 /* CamsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CamsTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,11 +78,9 @@
 				A7217D8328AA767700CBB6B1 /* Assets.xcassets */,
 				A7217D8828AA767700CBB6B1 /* Info.plist */,
 				A7217D8E28AA77E500CBB6B1 /* TabBarViewController.swift */,
-				A7217D9028AA7A2200CBB6B1 /* MainViewController.swift */,
-				A7217D9228AA7A3900CBB6B1 /* PhotosViewController.swift */,
-				A7217D9428AA7A4600CBB6B1 /* SettingsViewController.swift */,
-				A7217D9628AA8F2E00CBB6B1 /* RoverTableViewCell.swift */,
-				A7217D9B28AADDE800CBB6B1 /* CheckMarkView.swift */,
+				A73B88FF28AD166300ADB836 /* MainScreen */,
+				A73B890128AD168A00ADB836 /* PhotosScreen */,
+				A73B890028AD166F00ADB836 /* SettingsScreen */,
 				A7217D9828AACDF700CBB6B1 /* Colors */,
 			);
 			path = Rovers;
@@ -110,6 +110,33 @@
 				A73B88FA28ABC1C300ADB836 /* RoverData.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		A73B88FF28AD166300ADB836 /* MainScreen */ = {
+			isa = PBXGroup;
+			children = (
+				A7217D9028AA7A2200CBB6B1 /* MainViewController.swift */,
+				A73B88FC28AD15F600ADB836 /* CamsTableViewCell.swift */,
+			);
+			path = MainScreen;
+			sourceTree = "<group>";
+		};
+		A73B890028AD166F00ADB836 /* SettingsScreen */ = {
+			isa = PBXGroup;
+			children = (
+				A7217D9428AA7A4600CBB6B1 /* SettingsViewController.swift */,
+				A7217D9628AA8F2E00CBB6B1 /* RoverTableViewCell.swift */,
+				A7217D9B28AADDE800CBB6B1 /* CheckMarkView.swift */,
+			);
+			path = SettingsScreen;
+			sourceTree = "<group>";
+		};
+		A73B890128AD168A00ADB836 /* PhotosScreen */ = {
+			isa = PBXGroup;
+			children = (
+				A7217D9228AA7A3900CBB6B1 /* PhotosViewController.swift */,
+			);
+			path = PhotosScreen;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,6 +212,7 @@
 				A7217D9528AA7A4600CBB6B1 /* SettingsViewController.swift in Sources */,
 				A73B88F528ABA16800ADB836 /* RoverManager.swift in Sources */,
 				A7217D7B28AA767500CBB6B1 /* AppDelegate.swift in Sources */,
+				A73B88FD28AD15F600ADB836 /* CamsTableViewCell.swift in Sources */,
 				A73B88F928ABC19300ADB836 /* RoverModel.swift in Sources */,
 				A7217D9A28AACE1900CBB6B1 /* UIColorExtension.swift in Sources */,
 				A73B88FB28ABC1C300ADB836 /* RoverData.swift in Sources */,

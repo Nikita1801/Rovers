@@ -84,8 +84,8 @@ final class MainViewController: UIViewController {
     func configureTableView(){
         view.addSubview(camsTableView)
         setTableViewDelegates()
-        roverTableView.register(RoverTableViewCell.self, forCellReuseIdentifier: "cell")
-        roverTableView.rowHeight = 50
+        camsTableView.register(RoverTableViewCell.self, forCellReuseIdentifier: "camscell")
+        camsTableView.rowHeight = 160
         
     }
     
@@ -93,6 +93,20 @@ final class MainViewController: UIViewController {
         camsTableView.delegate = self
         camsTableView.dataSource = self
     }
+    
+}
+
+extension MainViewController: UITableViewDelegate, UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = camsTableView.dequeueReusableCell(withIdentifier: "camscell") as! CamsTableViewCell
+        
+        return cell
+    }
+    
     
 }
 
