@@ -13,7 +13,7 @@ protocol SettingsDelegate: AnyObject{
 
 final class SettingsViewController: UIViewController {
     
-    weak var roverDelegate: SettingsDelegate?
+    var roverDelegate: SettingsDelegate?
     
     let rovers = ["Spirit", "Opportunity","Curiosity", "Perseverance"]
     var roverTableView = UITableView()

@@ -10,6 +10,7 @@ import UIKit
 final class CamsTableViewCell: UITableViewCell {
     
     var roverManager = RoverManager()
+    var cameraName = ""
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -31,6 +32,7 @@ final class CamsTableViewCell: UITableViewCell {
     }()
     
     func set(camName: String){
+        cameraName = camName
         camLabel.text = camName
     }
     
@@ -53,6 +55,9 @@ final class CamsTableViewCell: UITableViewCell {
 extension CamsTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        while cameraName == roverModel.name{
+//          
+//       }
         5
     }
     

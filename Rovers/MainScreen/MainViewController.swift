@@ -7,6 +7,7 @@
 
 import UIKit
 
+var dateYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: Date())!
 
 
 final class MainViewController: UIViewController {
@@ -19,14 +20,16 @@ final class MainViewController: UIViewController {
     var camsTableView = UITableView()
     var selectedRover = "Curiosity"
     var isViewDidLoad = false
-
+    var dateYearAgoForNetwork: String = ""
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print(dateYearAgo)
         roverManager.roversArrayDelegate = self
-        settingsViewController.roverDelegate = self as! SettingsDelegate
-        
-        roverManager.fetchURL(roverName: selectedRover, earthDate: "2022-8-10")
+        settingsViewController.roverDelegate = self
+    
+        preapreDateAndMakeRequest()
         
         view.backgroundColor = .white
         isViewDidLoad = true
@@ -34,18 +37,27 @@ final class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         if isViewDidLoad{
-            roverManager.fetchURL(roverName: selectedRover, earthDate: "2022-8-10")
-            camsTableView.reloadData()
+            roverManager.fetchURL(roverName: selectedRover, earthDate: dateYearAgoForNetwork)
         }
         print(selectedRover)
         
     }
     
+    func preapreDateAndMakeRequest() {
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = "YYYY-M-d"
+        dateYearAgoForNetwork = dateFormater.string(from: dateYearAgo)
+        roverManager.fetchURL(roverName: selectedRover, earthDate: dateYearAgoForNetwork)
+    }
     
     
-    private let dateLabel: UILabel = {
+    private var dateLabel: UILabel = {
         let label = UILabel()
-        label.text = "15.08.2022"
+        
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = "dd.MM.YYYY"
+        let newDate = dateFormater.string(from: dateYearAgo)
+        label.text = newDate
         label.textColor = UIColor.customGrey
         label.font = UIFont(name: "Helvetica Bold", size: 11)
         
@@ -61,7 +73,7 @@ final class MainViewController: UIViewController {
     
     private let roverName: UILabel = {
         let label = UILabel()
-        label.text = "Spirit"
+        label.text = "Curiosity"
         label.textColor = UIColor.customBlack
         label.font = UIFont(name: "Helvetica Bold", size: 34)
         
@@ -71,6 +83,7 @@ final class MainViewController: UIViewController {
     private let leftArrowButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "arrowleft.png"), for: .normal)
+        button.addTarget(self, action: #selector(decreaseDate), for: .touchUpInside)
         
         return button
     }()
@@ -78,11 +91,12 @@ final class MainViewController: UIViewController {
     private let rightArrowButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "arrowright.png"), for: .normal)
+        button.addTarget(self, action: #selector(increaseDate), for: .touchUpInside)
         
         return button
     }()
     
-
+    
     override func viewDidLayoutSubviews() {
         leftArrowButton.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
         rightArrowButton.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
@@ -105,7 +119,7 @@ final class MainViewController: UIViewController {
             camsNames.append(roverInfo?.cameraName ?? "")
         }
         camsNames = Array(Set(camsNames)).sorted()
-//        camsNames.removeFirst()
+        //        camsNames.removeFirst()
         camsNames = camsNames.filter{$0 != ""}
         
         print("______________________________\(camsNames)")
@@ -133,6 +147,38 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
 
 
 private extension MainViewController{
+    
+    // Проверить обновляется ли UI
+    @objc func decreaseDate(){
+
+        dateYearAgo = Calendar.current.date(byAdding: .day, value: -1, to: dateYearAgo)!
+        
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = "dd.MM.YYYY"
+        let decreasedDate = dateFormater.string(from: dateYearAgo)
+        dateLabel.text = decreasedDate
+        
+        let dateDormaterForNetwork = DateFormatter()
+        dateDormaterForNetwork.dateFormat = "YYYY-M-d"
+        let decreasedDateForNetwork = dateDormaterForNetwork.string(from: dateYearAgo)
+        roverManager.fetchURL(roverName: selectedRover, earthDate: decreasedDateForNetwork)
+
+    }
+    
+    @objc func increaseDate(){
+
+        dateYearAgo = Calendar.current.date(byAdding: .day, value: +1, to: dateYearAgo)!
+        
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = "dd.MM.YYYY"
+        let decreasedDate = dateFormater.string(from: dateYearAgo)
+        dateLabel.text = decreasedDate
+        
+        let dateDormaterForNetwork = DateFormatter()
+        dateDormaterForNetwork.dateFormat = "YYYY-M-d"
+        let decreasedDateForNetwork = dateDormaterForNetwork.string(from: dateYearAgo)
+        roverManager.fetchURL(roverName: selectedRover, earthDate: decreasedDateForNetwork)
+    }
     
     func configureView(){
         view.addSubview(dateLabel)
@@ -163,15 +209,15 @@ private extension MainViewController{
             horizontalStackView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor),
             horizontalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             horizontalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
-//            horizontalStackView.bottomAnchor.constraint(equalTo: camsTableView.topAnchor, constant: 60),
+            //            horizontalStackView.bottomAnchor.constraint(equalTo: camsTableView.topAnchor, constant: 60),
             
             roverName.topAnchor.constraint(equalTo: horizontalStackView.topAnchor),
             roverName.leadingAnchor.constraint(equalTo: horizontalStackView.leadingAnchor),
-//            roverName.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
+            //            roverName.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
             
             leftArrowButton.topAnchor.constraint(equalTo: horizontalStackView.topAnchor),
             leftArrowButton.trailingAnchor.constraint(equalTo: rightArrowButton.leadingAnchor, constant: 16),
-//            leftArrowButton.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
+            //            leftArrowButton.bottomAnchor.constraint(equalTo: horizontalStackView.bottomAnchor),
             
             rightArrowButton.topAnchor.constraint(equalTo: horizontalStackView.topAnchor),
             rightArrowButton.leadingAnchor.constraint(equalTo: leftArrowButton.trailingAnchor),
@@ -190,7 +236,7 @@ extension MainViewController: SettingsDelegate{
     
     func fetchSelectedRover(selectedRoverName: String) {
         selectedRover = selectedRoverName
-        print("Fix later\(selectedRover)----_______-----_____")    // FIX THIS DELEGATE
+        print("Fix later\(selectedRover)--------------")    // FIX THIS DELEGATE
     }
 }
 
@@ -198,11 +244,13 @@ extension MainViewController: RoverManagerDelegate{
     func didUpdateRoverInfo(_ roverManager: RoverManager, roversArray: [RoverModel?]) {
         
         camsInfoArray = roversArray
+        print(camsInfoArray)
         getCamNamesWithoutDuplicates()
         
         DispatchQueue.main.async {
             self.configureTableView()
             self.configureView()
+            self.camsTableView.reloadData()
         }
     }
     
