@@ -34,6 +34,7 @@ final class RoverManager{
                 if let safeData = data{
                     let roverInfo = self.parseJSON(safeData)
                     // delegate updateUI
+                    
                     print(self.roversArrayDelegate?.didUpdateRoverInfo(self, roversArray: roverInfo))
                     //print(roverInfo)
                 }

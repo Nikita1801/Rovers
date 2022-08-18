@@ -29,7 +29,7 @@ final class SettingsViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        print(roverDelegate?.fetchSelectedRover(selectedRoverName: selectedRover))
+        
         
     }
     func configureTableView(){
@@ -86,6 +86,8 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource{
         roverTableView.cellForRow(at: indexPath)?.accessoryView?.isHidden = false
         selectedRover = rovers[indexPath.row]
         print(selectedRover)
+        roverDelegate?.fetchSelectedRover(selectedRoverName: selectedRover)
+        print(roverDelegate)
 
         
     }

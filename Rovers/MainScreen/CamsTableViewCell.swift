@@ -9,14 +9,13 @@ import UIKit
 
 final class CamsTableViewCell: UITableViewCell {
     
-    var roverManager = RoverManager()
     var cameraName = ""
-    var camsDict: [String: CamsModel] = [:]
+    var photoArray: [CamsModel] = []
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        
+//        photosCollectionView.layer.borderWidth = 1
+  
         configureView()
     }
     
@@ -32,8 +31,13 @@ final class CamsTableViewCell: UITableViewCell {
     }()
     
     func set(camName: String){
-        cameraName = camName
         camLabel.text = camName
+        
+    }
+    
+    func set(camsPhotoArray: [CamsModel]){
+        self.photoArray = camsPhotoArray
+        print("PRINT: \(photoArray)")
     }
     
     private let photosCollectionView: UICollectionView = {
@@ -49,28 +53,26 @@ final class CamsTableViewCell: UITableViewCell {
         photosCollectionView.dataSource = self
         photosCollectionView.delegate = self
     }
-    // ? Возможно удалить
-    func getCamsInfo(camsInfo: [String : CamsModel]){
-        camsDict = camsInfo
-        print("_________________")
-        //print(camsDict)
-    }
     
 }
 
 extension CamsTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        while cameraName == roverModel.name{
-//          
-//       }
-        5
+        photoArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoscell", for: indexPath) as! PhotosCollectionViewCell
+        let photoDetails = photoArray[indexPath.row]
+        collectionViewCell.set(id: photoDetails.id, sol: photoDetails.sol)
+//        collectionViewCell.backgroundColor = UIColor.systemRed
         
         return collectionViewCell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 138, height: 116)
     }
     
 
@@ -79,11 +81,12 @@ extension CamsTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionVie
 
 private extension CamsTableViewCell{
     
-
-    
     func configureView(){
+        setCollectionViewDelegates()
+        
         addSubview(camLabel)
         addSubview(photosCollectionView)
+        
         
         setConstraints()
     }
@@ -91,11 +94,19 @@ private extension CamsTableViewCell{
     
     func setConstraints(){
         camLabel.translatesAutoresizingMaskIntoConstraints = false
+        photosCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             
             camLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            camLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8)
+            camLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            camLabel.bottomAnchor.constraint(equalTo: photosCollectionView.topAnchor, constant: -24),
+            
+            photosCollectionView.topAnchor.constraint(equalTo: camLabel.bottomAnchor),
+            photosCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            photosCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            photosCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            
         ])
     }
 }

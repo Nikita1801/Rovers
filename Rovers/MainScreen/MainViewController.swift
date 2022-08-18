@@ -14,13 +14,14 @@ final class MainViewController: UIViewController {
     
     var camsInfoArray: [RoverModel?] = []
     var camsNames: [String] = [""]
+    var sortedCamerasDict: [String: [CamsModel]] = [:]
     
     var roverManager = RoverManager()
     var camsTableView = UITableView()
     var selectedRover = "Curiosity"
     var isViewDidLoad = false
     var dateYearAgoForNetwork: String = ""
-    var camsDict: [String: CamsModel] = [:]
+
     
     
     override func viewDidLoad() {
@@ -41,7 +42,9 @@ final class MainViewController: UIViewController {
         }
         print(selectedRover)
         
+        camsTableView.reloadData()
     }
+    
     
     func preapreDateAndMakeRequest() {
         let dateFormater = DateFormatter()
@@ -124,22 +127,26 @@ final class MainViewController: UIViewController {
     }
     
     func createCamsModelDict(camsInfoArray: [RoverModel?]){
-        var camsDictArray: [[String:CamsModel]] = [[:]]
         
-        for rover in camsInfoArray{
-            camsDict = [:]
-            let camName = rover?.cameraName ?? ""
+        for photo in camsInfoArray{
+            guard let photo = photo else{
+                continue
+            }
+            let camName = photo.cameraName
+            if var photosArray = sortedCamerasDict[camName]{
+                photosArray.append(CamsModel(id: photo.id, sol: photo.sol, image: photo.image))
+                sortedCamerasDict[camName] = photosArray
+            }else{
+                var photosArray : [CamsModel] = []
+                photosArray.append(CamsModel(id: photo.id, sol: photo.sol, image: photo.image))
+                sortedCamerasDict[camName] = photosArray
+            }
             
-            let id = rover?.id
-            let sol = rover?.sol
-            let image = rover?.image
-            
-            let camsModelArray: CamsModel = CamsModel(id: id ?? 0, sol: sol ?? 0, image: image ?? "")
-            
-            camsDict[camName] = camsModelArray
-            camsDictArray.append(camsDict)
         }
-        print(camsDictArray)
+        print(sortedCamerasDict.keys)
+        for key in sortedCamerasDict.keys{
+            print("\(key): \(sortedCamerasDict[key]?.count)")
+        }
     }
     
 }
@@ -147,27 +154,21 @@ final class MainViewController: UIViewController {
 extension MainViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        
-        return camsNames.count
+        return sortedCamerasDict.keys.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = camsTableView.dequeueReusableCell(withIdentifier: "camscell") as! CamsTableViewCell
-        let camName = camsNames[indexPath.row]
-        cell.set(camName: camName)
+        let keysArray = Array(sortedCamerasDict.keys)
         
-        
-        for _ in 0...camsDict.count{
-           // cell.getCamsInfo(camsInfo: camsDict.filter({ $0.key == camName }))
-        }
-        
+        let currentCamName: String = keysArray[indexPath.row]
+        let cameraPhotos: [CamsModel] = sortedCamerasDict[currentCamName] ?? []
+        cell.set(camName: currentCamName)
+        cell.set(camsPhotoArray: cameraPhotos)
         
         return cell
     }
-    
-    
 }
-
 
 private extension MainViewController{
     
