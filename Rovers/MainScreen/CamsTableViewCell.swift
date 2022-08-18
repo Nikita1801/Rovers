@@ -11,12 +11,12 @@ final class CamsTableViewCell: UITableViewCell {
     
     var roverManager = RoverManager()
     var cameraName = ""
+    var camsDict: [String: CamsModel] = [:]
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         
-        // Возможно стоит перенести в didUpdateRoverInfo
         configureView()
     }
     
@@ -49,6 +49,12 @@ final class CamsTableViewCell: UITableViewCell {
         photosCollectionView.dataSource = self
         photosCollectionView.delegate = self
     }
+    // ? Возможно удалить
+    func getCamsInfo(camsInfo: [String : CamsModel]){
+        camsDict = camsInfo
+        print("_________________")
+        //print(camsDict)
+    }
     
 }
 
@@ -66,10 +72,14 @@ extension CamsTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionVie
         
         return collectionViewCell
     }
+    
+
 }
 
 
 private extension CamsTableViewCell{
+    
+
     
     func configureView(){
         addSubview(camLabel)

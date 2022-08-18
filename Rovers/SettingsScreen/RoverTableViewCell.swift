@@ -16,16 +16,9 @@ class RoverTableViewCell: UITableViewCell{
         roverNameLable.font = UIFont(name: "Helvetica", size: 16)
         roverNameLable.highlightedTextColor = UIColor.customPurple
         addSubview(roverNameLable)
-//        addSubview(checkmark)
         setConstraints()
     }
-//    private let checkmark : UIView = {
-//        let img = UIImage(named: "checkmark.png")
-//        let imageView: UIImageView = UIImageView(image: img)
-//        imageView.isHidden = true
-//
-//        return imageView
-//    }()
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

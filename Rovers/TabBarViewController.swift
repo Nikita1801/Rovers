@@ -20,10 +20,17 @@ final class TabBarViewController: UITabBarController {
     
     func setupTabBar(){
         
-        let mainViewController = createNavigationController(vc: MainViewController(), itemName: "Камеры", itemImage: "камеры")
-        let settingsViewController = createNavigationController(vc: SettingsViewController(), itemName: "Настройки", itemImage: "настройки")
+        let settingsViewController = SettingsViewController()
+        let mainViewController = MainViewController()
+        settingsViewController.roverDelegate = mainViewController
         
-        viewControllers = [mainViewController, settingsViewController]
+        let mainTabItem = createNavigationController(vc: MainViewController(), itemName: "Камеры", itemImage: "камеры")
+//        let settingsViewController = createNavigationController(vc: SettingsViewController(), itemName: "Настройки", itemImage: "настройки")
+
+        
+        let item = UITabBarItem(title: "Настройки", image: UIImage(named: "настройки"), tag: 0)
+        viewControllers = [mainTabItem, settingsViewController]
+        settingsViewController.tabBarItem = item
     }
     
     func createNavigationController(vc: UIViewController, itemName: String, itemImage: String) -> UINavigationController{

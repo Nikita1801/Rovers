@@ -16,18 +16,17 @@ final class MainViewController: UIViewController {
     var camsNames: [String] = [""]
     
     var roverManager = RoverManager()
-    var settingsViewController = SettingsViewController()
     var camsTableView = UITableView()
     var selectedRover = "Curiosity"
     var isViewDidLoad = false
     var dateYearAgoForNetwork: String = ""
+    var camsDict: [String: CamsModel] = [:]
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print(dateYearAgo)
         roverManager.roversArrayDelegate = self
-        settingsViewController.roverDelegate = self
     
         preapreDateAndMakeRequest()
         
@@ -37,7 +36,8 @@ final class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         if isViewDidLoad{
-            roverManager.fetchURL(roverName: selectedRover, earthDate: dateYearAgoForNetwork)
+            //roverManager.fetchURL(roverName: selectedRover, earthDate: dateYearAgoForNetwork)
+            
         }
         print(selectedRover)
         
@@ -119,10 +119,27 @@ final class MainViewController: UIViewController {
             camsNames.append(roverInfo?.cameraName ?? "")
         }
         camsNames = Array(Set(camsNames)).sorted()
-        //        camsNames.removeFirst()
         camsNames = camsNames.filter{$0 != ""}
         
-        print("______________________________\(camsNames)")
+    }
+    
+    func createCamsModelDict(camsInfoArray: [RoverModel?]){
+        var camsDictArray: [[String:CamsModel]] = [[:]]
+        
+        for rover in camsInfoArray{
+            camsDict = [:]
+            let camName = rover?.cameraName ?? ""
+            
+            let id = rover?.id
+            let sol = rover?.sol
+            let image = rover?.image
+            
+            let camsModelArray: CamsModel = CamsModel(id: id ?? 0, sol: sol ?? 0, image: image ?? "")
+            
+            camsDict[camName] = camsModelArray
+            camsDictArray.append(camsDict)
+        }
+        print(camsDictArray)
     }
     
 }
@@ -138,6 +155,12 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
         let cell = camsTableView.dequeueReusableCell(withIdentifier: "camscell") as! CamsTableViewCell
         let camName = camsNames[indexPath.row]
         cell.set(camName: camName)
+        
+        
+        for _ in 0...camsDict.count{
+           // cell.getCamsInfo(camsInfo: camsDict.filter({ $0.key == camName }))
+        }
+        
         
         return cell
     }
@@ -232,20 +255,33 @@ private extension MainViewController{
     }
 }
 
+// MARK: SettingsProtocol
 extension MainViewController: SettingsDelegate{
     
     func fetchSelectedRover(selectedRoverName: String) {
+        let dateFormater = DateFormatter()
+        dateFormater.dateFormat = "YYYY-M-d"
+        dateYearAgoForNetwork = dateFormater.string(from: dateYearAgo)
+        
         selectedRover = selectedRoverName
-        print("Fix later\(selectedRover)--------------")    // FIX THIS DELEGATE
+        print("SELECTED ROVER IS: \(selectedRover)")
+        roverManager.fetchURL(roverName: selectedRover, earthDate: dateYearAgoForNetwork)
+        DispatchQueue.main.async {
+            self.roverName.text = selectedRoverName
+            self.camsTableView.reloadData()
+        }
+
     }
 }
 
+// MARK: RoverManagerProtocol
 extension MainViewController: RoverManagerDelegate{
     func didUpdateRoverInfo(_ roverManager: RoverManager, roversArray: [RoverModel?]) {
         
         camsInfoArray = roversArray
-        print(camsInfoArray)
         getCamNamesWithoutDuplicates()
+        createCamsModelDict(camsInfoArray: camsInfoArray)
+        
         
         DispatchQueue.main.async {
             self.configureTableView()
