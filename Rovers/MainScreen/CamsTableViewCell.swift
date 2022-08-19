@@ -14,30 +14,37 @@ final class CamsTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-//        photosCollectionView.layer.borderWidth = 1
-  
+
         configureView()
+        
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let camLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont(name: "Helvetica Bold", size: 16)
+    private let camButton: UIButton = {
+        let button = UIButton()
+        if let font = UIFont(name: "Helvetica Bold", size: 16){
+            button.titleLabel?.font = font
+        }
+        button.addTarget(self, action: #selector(camButtonTapped), for: .touchUpInside)
+        button.backgroundColor = UIColor.customBlack
         
-        return label
+        return button
     }()
     
+    @objc func camButtonTapped(){
+        print(camButton.titleLabel)
+    }
+    
     func set(camName: String){
-        camLabel.text = camName
-        
+        camButton.setTitle(camName, for: .highlighted)
+        print(camButton.titleLabel)
     }
     
     func set(camsPhotoArray: [CamsModel]){
         self.photoArray = camsPhotoArray
-        print("PRINT: \(photoArray)")
     }
     
     private let photosCollectionView: UICollectionView = {
@@ -54,6 +61,13 @@ final class CamsTableViewCell: UITableViewCell {
         photosCollectionView.delegate = self
     }
     
+    var didLayout = false
+    override func layoutSubviews() {
+        if !self.didLayout {
+            self.didLayout = true // only need to do this once
+            self.photosCollectionView.reloadData()
+        }
+    }
 }
 
 extension CamsTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
@@ -65,7 +79,7 @@ extension CamsTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoscell", for: indexPath) as! PhotosCollectionViewCell
         let photoDetails = photoArray[indexPath.row]
-        collectionViewCell.set(id: photoDetails.id, sol: photoDetails.sol)
+        collectionViewCell.set(id: photoDetails.id, sol: photoDetails.sol, image: photoDetails.image)
 //        collectionViewCell.backgroundColor = UIColor.systemRed
         
         return collectionViewCell
@@ -84,7 +98,7 @@ private extension CamsTableViewCell{
     func configureView(){
         setCollectionViewDelegates()
         
-        addSubview(camLabel)
+        addSubview(camButton)
         addSubview(photosCollectionView)
         
         
@@ -93,16 +107,16 @@ private extension CamsTableViewCell{
     
     
     func setConstraints(){
-        camLabel.translatesAutoresizingMaskIntoConstraints = false
+        camButton.translatesAutoresizingMaskIntoConstraints = false
         photosCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             
-            camLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            camLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            camLabel.bottomAnchor.constraint(equalTo: photosCollectionView.topAnchor, constant: -24),
+            camButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            camButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            camButton.bottomAnchor.constraint(equalTo: photosCollectionView.topAnchor, constant: -24),
             
-            photosCollectionView.topAnchor.constraint(equalTo: camLabel.bottomAnchor),
+            photosCollectionView.topAnchor.constraint(equalTo: camButton.bottomAnchor),
             photosCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             photosCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
             photosCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)

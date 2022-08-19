@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Nuke
 
 final class PhotosCollectionViewCell: UICollectionViewCell {
     
@@ -22,8 +23,9 @@ final class PhotosCollectionViewCell: UICollectionViewCell {
     private let photoImage: UIImageView = {
         let image = UIImageView()
 //        image.largeContentImage =
-        image.backgroundColor = UIColor.systemBlue
+        
         image.translatesAutoresizingMaskIntoConstraints = false
+        image.layer.cornerRadius = 20.0
         
         return image
     }()
@@ -46,9 +48,14 @@ final class PhotosCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    func set(id: Int, sol: Int){
+    
+    func set(id: Int, sol: Int, image: String){
         idLabel.text = "id #\(id)"
         solLabel.text = "СОЛ #\(sol)"
+        let url = image
+        Nuke.loadImage(with: url, into: photoImage)
+
+
     }
     
     func configureView(){

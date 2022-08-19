@@ -109,23 +109,13 @@ final class MainViewController: UIViewController {
         setTableViewDelegates()
         camsTableView.register(CamsTableViewCell.self, forCellReuseIdentifier: "camscell")
         camsTableView.rowHeight = 160
-        
     }
     
     func setTableViewDelegates(){
         camsTableView.delegate = self
         camsTableView.dataSource = self
     }
-    
-    func getCamNamesWithoutDuplicates(){
-        for roverInfo in camsInfoArray {
-            camsNames.append(roverInfo?.cameraName ?? "")
-        }
-        camsNames = Array(Set(camsNames)).sorted()
-        camsNames = camsNames.filter{$0 != ""}
-        
-    }
-    
+
     func createCamsModelDict(camsInfoArray: [RoverModel?]){
         
         for photo in camsInfoArray{
@@ -280,7 +270,6 @@ extension MainViewController: RoverManagerDelegate{
     func didUpdateRoverInfo(_ roverManager: RoverManager, roversArray: [RoverModel?]) {
         
         camsInfoArray = roversArray
-        getCamNamesWithoutDuplicates()
         createCamsModelDict(camsInfoArray: camsInfoArray)
         
         
