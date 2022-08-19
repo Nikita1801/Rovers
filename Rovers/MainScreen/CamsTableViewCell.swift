@@ -23,13 +23,14 @@ final class CamsTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let camButton: UIButton = {
+    lazy var camButton: UIButton = {
         let button = UIButton()
         if let font = UIFont(name: "Helvetica Bold", size: 16){
             button.titleLabel?.font = font
         }
         button.addTarget(self, action: #selector(camButtonTapped), for: .touchUpInside)
         button.backgroundColor = UIColor.customBlack
+        button.setTitle(cameraName, for: .normal)
         
         return button
     }()
@@ -39,6 +40,7 @@ final class CamsTableViewCell: UITableViewCell {
     }
     
     func set(camName: String){
+        cameraName = camName
         camButton.setTitle(camName, for: .highlighted)
         print(camButton.titleLabel)
     }
@@ -51,6 +53,7 @@ final class CamsTableViewCell: UITableViewCell {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.isScrollEnabled = true
         collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: "photoscell")
         
         return collectionView
