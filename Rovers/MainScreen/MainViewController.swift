@@ -19,7 +19,6 @@ final class MainViewController: UIViewController {
     var roverManager = RoverManager()
     var camsTableView = UITableView()
     var selectedRover = "Curiosity"
-    var isViewDidLoad = false
     var dateYearAgoForNetwork: String = ""
 
     
@@ -32,14 +31,11 @@ final class MainViewController: UIViewController {
         preapreDateAndMakeRequest()
         
         view.backgroundColor = .white
-        isViewDidLoad = true
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        if isViewDidLoad{
-            //roverManager.fetchURL(roverName: selectedRover, earthDate: dateYearAgoForNetwork)
-            
-        }
+
         print(selectedRover)
         
         camsTableView.reloadData()
@@ -96,6 +92,7 @@ final class MainViewController: UIViewController {
         button.setImage(UIImage(named: "arrowright.png"), for: .normal)
         button.addTarget(self, action: #selector(increaseDate), for: .touchUpInside)
         
+        
         return button
     }()
     
@@ -117,6 +114,7 @@ final class MainViewController: UIViewController {
     }
 
     func createCamsModelDict(camsInfoArray: [RoverModel?]){
+        sortedCamerasDict = [:]
         
         for photo in camsInfoArray{
             guard let photo = photo else{
@@ -149,7 +147,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = camsTableView.dequeueReusableCell(withIdentifier: "camscell") as! CamsTableViewCell
-        let keysArray = Array(sortedCamerasDict.keys)
+        let keysArray = Array(sortedCamerasDict.keys).sorted()
         
         let currentCamName: String = keysArray[indexPath.row]
         let cameraPhotos: [CamsModel] = sortedCamerasDict[currentCamName] ?? []
@@ -176,6 +174,7 @@ private extension MainViewController{
         dateDormaterForNetwork.dateFormat = "YYYY-M-d"
         let decreasedDateForNetwork = dateDormaterForNetwork.string(from: dateYearAgo)
         roverManager.fetchURL(roverName: selectedRover, earthDate: decreasedDateForNetwork)
+        
 
     }
     
@@ -277,6 +276,7 @@ extension MainViewController: RoverManagerDelegate{
             self.configureTableView()
             self.configureView()
             self.camsTableView.reloadData()
+            print("DATA RLOADED")
         }
     }
     

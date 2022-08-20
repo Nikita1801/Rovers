@@ -7,13 +7,13 @@
 
 import Foundation
 
-protocol RoverManagerDelegate{
+protocol RoverManagerDelegate: AnyObject{
     func didUpdateRoverInfo(_ roverManager: RoverManager, roversArray: [RoverModel?])
 }
 
 final class RoverManager{
     // https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?&earth_date=2022-8-10&api_key=Uls3MlNWdgwJ9Vzmw8kXbdUdvRixsSz72ulUD3AL
-    var roversArrayDelegate: RoverManagerDelegate?
+    weak var roversArrayDelegate: RoverManagerDelegate?
     let nasaURL = "https://api.nasa.gov/mars-photos/api/v1/rovers/"
     let apiKey = "Uls3MlNWdgwJ9Vzmw8kXbdUdvRixsSz72ulUD3AL"
     

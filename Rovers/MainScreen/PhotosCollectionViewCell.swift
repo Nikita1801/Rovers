@@ -10,6 +10,7 @@ import Nuke
 
 final class PhotosCollectionViewCell: UICollectionViewCell {
     
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -22,10 +23,9 @@ final class PhotosCollectionViewCell: UICollectionViewCell {
     
     private let photoImage: UIImageView = {
         let image = UIImageView()
-//        image.largeContentImage =
-        
         image.translatesAutoresizingMaskIntoConstraints = false
-        image.layer.cornerRadius = 20.0
+        image.layer.cornerRadius = 4
+        image.clipsToBounds = true
         
         return image
     }()
@@ -55,7 +55,6 @@ final class PhotosCollectionViewCell: UICollectionViewCell {
         let url = image
         Nuke.loadImage(with: url, into: photoImage)
 
-
     }
     
     func configureView(){
@@ -69,7 +68,7 @@ final class PhotosCollectionViewCell: UICollectionViewCell {
         super.layoutSubviews()
         
         photoImage.frame = CGRect(x: 0,
-                                  y: 0,
+                                  y: 4,
                                   width: contentView.frame.size.width,
                                   height: 76)
         

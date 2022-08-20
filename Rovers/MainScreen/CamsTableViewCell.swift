@@ -15,7 +15,9 @@ final class CamsTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        
         configureView()
+        photosCollectionView.reloadData()
         
     }
     
@@ -29,8 +31,9 @@ final class CamsTableViewCell: UITableViewCell {
             button.titleLabel?.font = font
         }
         button.addTarget(self, action: #selector(camButtonTapped), for: .touchUpInside)
-        button.backgroundColor = UIColor.customBlack
+//        button.backgroundColor = UIColor.customBlack
         button.setTitle(cameraName, for: .normal)
+        button.setTitleColor(UIColor.customBlack, for: .normal)
         
         return button
     }()
@@ -41,12 +44,13 @@ final class CamsTableViewCell: UITableViewCell {
     
     func set(camName: String){
         cameraName = camName
-        camButton.setTitle(camName, for: .highlighted)
+        camButton.setTitle(camName, for: .normal)
         print(camButton.titleLabel)
     }
     
     func set(camsPhotoArray: [CamsModel]){
         self.photoArray = camsPhotoArray
+        photosCollectionView.reloadData()
     }
     
     private let photosCollectionView: UICollectionView = {
@@ -56,6 +60,7 @@ final class CamsTableViewCell: UITableViewCell {
         collectionView.isScrollEnabled = true
         collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: "photoscell")
         
+        
         return collectionView
     }()
     
@@ -63,14 +68,7 @@ final class CamsTableViewCell: UITableViewCell {
         photosCollectionView.dataSource = self
         photosCollectionView.delegate = self
     }
-    
-    var didLayout = false
-    override func layoutSubviews() {
-        if !self.didLayout {
-            self.didLayout = true // only need to do this once
-            self.photosCollectionView.reloadData()
-        }
-    }
+
 }
 
 extension CamsTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource{
@@ -83,7 +81,6 @@ extension CamsTableViewCell: UICollectionViewDelegateFlowLayout, UICollectionVie
         let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoscell", for: indexPath) as! PhotosCollectionViewCell
         let photoDetails = photoArray[indexPath.row]
         collectionViewCell.set(id: photoDetails.id, sol: photoDetails.sol, image: photoDetails.image)
-//        collectionViewCell.backgroundColor = UIColor.systemRed
         
         return collectionViewCell
     }
@@ -101,8 +98,8 @@ private extension CamsTableViewCell{
     func configureView(){
         setCollectionViewDelegates()
         
-        addSubview(camButton)
-        addSubview(photosCollectionView)
+        contentView.addSubview(camButton)
+        contentView.addSubview(photosCollectionView)
         
         
         setConstraints()
@@ -117,7 +114,7 @@ private extension CamsTableViewCell{
             
             camButton.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             camButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            camButton.bottomAnchor.constraint(equalTo: photosCollectionView.topAnchor, constant: -24),
+            camButton.bottomAnchor.constraint(equalTo: photosCollectionView.topAnchor, constant: -12),
             
             photosCollectionView.topAnchor.constraint(equalTo: camButton.bottomAnchor),
             photosCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
