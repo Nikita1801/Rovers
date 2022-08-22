@@ -7,22 +7,19 @@
 
 import Foundation
 
-protocol RoverManagerDelegate: AnyObject{
-    func didUpdateRoverInfo(_ roverManager: RoverManager, roversArray: [RoverModel?])
-}
+
 
 final class RoverManager{
     // https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?&earth_date=2022-8-10&api_key=Uls3MlNWdgwJ9Vzmw8kXbdUdvRixsSz72ulUD3AL
-    weak var roversArrayDelegate: RoverManagerDelegate?
+
     let nasaURL = "https://api.nasa.gov/mars-photos/api/v1/rovers/"
     let apiKey = "Uls3MlNWdgwJ9Vzmw8kXbdUdvRixsSz72ulUD3AL"
     
-    func fetchURL(roverName: String, earthDate: String) {
-        let roverURL = "\(nasaURL)\(roverName)/photos?&earth_date=\(earthDate)&api_key=\(apiKey)"
-        getData(finalURL: roverURL)
-    }
     
-    func getData(finalURL: String){
+    func getData(roverName: String, earthDate: String, comletionHandler:@escaping ([RoverModel?], Error?) -> Void){
+        
+        let finalURL = "\(nasaURL)\(roverName)/photos?&earth_date=\(earthDate)&api_key=\(apiKey)"
+        
         if let url = URL(string: finalURL){
             print(url)
             let session = URLSession(configuration: .default)
@@ -35,7 +32,8 @@ final class RoverManager{
                     let roverInfo = self.parseJSON(safeData)
                     // delegate updateUI
                     
-                    print(self.roversArrayDelegate?.didUpdateRoverInfo(self, roversArray: roverInfo))
+//                    print(self.roversArrayDelegate?.didUpdateRoverInfo(self, roversArray: roverInfo))
+                    comletionHandler(roverInfo, nil)
                     //print(roverInfo)
                 }
             }

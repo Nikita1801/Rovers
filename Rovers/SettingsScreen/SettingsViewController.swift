@@ -87,9 +87,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource{
         selectedRover = rovers[indexPath.row]
         print(selectedRover)
         roverDelegate?.fetchSelectedRover(selectedRoverName: selectedRover)
-        print(roverDelegate)
 
-        
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

@@ -25,34 +25,52 @@ final class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(dateYearAgo)
-        roverManager.roversArrayDelegate = self
-    
-        preapreDateAndMakeRequest()
-        
-        view.backgroundColor = .white
 
+//        roverManager.roversArrayDelegate = self
+        
+        configureTableView()
+        configureView()
+
+        preapreDate()
+        
+        roverManager.getData(roverName: selectedRover, earthDate: dateYearAgoForNetwork) { [weak self] (roversArray, error) in
+            self?.updateUI(roversArray: roversArray)
+            
+        }
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+//        roverManager.getData(roverName: selectedRover, earthDate: dateYearAgoForNetwork) { [weak self] (roversArray, error) in
+//            self?.updateUI(roversArray: roversArray)
+//
+//        }
 
         print(selectedRover)
-        
-        camsTableView.reloadData()
     }
     
+    func updateUI(roversArray: [RoverModel?]){
+        self.camsInfoArray = roversArray
+        self.createCamsModelDict(camsInfoArray: camsInfoArray)
+        
+        
+        DispatchQueue.main.async {
+            self.camsTableView.reloadData()
+        }
+        print("___UI UPDATED___")
+    }
     
-    func preapreDateAndMakeRequest() {
+    func preapreDate() {
         let dateFormater = DateFormatter()
         dateFormater.dateFormat = "YYYY-M-d"
         dateYearAgoForNetwork = dateFormater.string(from: dateYearAgo)
-        roverManager.fetchURL(roverName: selectedRover, earthDate: dateYearAgoForNetwork)
     }
     
     
     private var dateLabel: UILabel = {
         let label = UILabel()
-        
         let dateFormater = DateFormatter()
         dateFormater.dateFormat = "dd.MM.YYYY"
         let newDate = dateFormater.string(from: dateYearAgo)
@@ -91,7 +109,6 @@ final class MainViewController: UIViewController {
         let button = UIButton()
         button.setImage(UIImage(named: "arrowright.png"), for: .normal)
         button.addTarget(self, action: #selector(increaseDate), for: .touchUpInside)
-        
         
         return button
     }()
@@ -137,6 +154,8 @@ final class MainViewController: UIViewController {
         }
     }
     
+    
+    
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource{
@@ -173,8 +192,10 @@ private extension MainViewController{
         let dateDormaterForNetwork = DateFormatter()
         dateDormaterForNetwork.dateFormat = "YYYY-M-d"
         let decreasedDateForNetwork = dateDormaterForNetwork.string(from: dateYearAgo)
-        roverManager.fetchURL(roverName: selectedRover, earthDate: decreasedDateForNetwork)
         
+        roverManager.getData(roverName: selectedRover, earthDate: decreasedDateForNetwork) { [weak self] (roversArray, error) in
+            self?.updateUI(roversArray: roversArray)
+        }
 
     }
     
@@ -184,16 +205,33 @@ private extension MainViewController{
         
         let dateFormater = DateFormatter()
         dateFormater.dateFormat = "dd.MM.YYYY"
-        let decreasedDate = dateFormater.string(from: dateYearAgo)
-        dateLabel.text = decreasedDate
+        let increasedDate = dateFormater.string(from: dateYearAgo)
+        dateLabel.text = increasedDate
         
         let dateDormaterForNetwork = DateFormatter()
         dateDormaterForNetwork.dateFormat = "YYYY-M-d"
-        let decreasedDateForNetwork = dateDormaterForNetwork.string(from: dateYearAgo)
-        roverManager.fetchURL(roverName: selectedRover, earthDate: decreasedDateForNetwork)
+        let increasedDateForNetwork = dateDormaterForNetwork.string(from: dateYearAgo)
+        
+        roverManager.getData(roverName: selectedRover, earthDate: increasedDateForNetwork) { [weak self] (roversArray, error) in
+            self?.updateUI(roversArray: roversArray)
+        }
     }
     
+//    func updateUI(roversArray: [RoverModel?]){
+//
+//        camsInfoArray = roversArray
+//        createCamsModelDict(camsInfoArray: camsInfoArray)
+//
+//
+//        DispatchQueue.main.async {
+//            self.camsTableView.reloadData()
+//            print("DATA RLOADED")
+//        }
+//
+//    }
+    
     func configureView(){
+        view.backgroundColor = .white
         view.addSubview(dateLabel)
         horizontalStackView.addSubview(roverName)
         horizontalStackView.addSubview(leftArrowButton)
@@ -254,30 +292,18 @@ extension MainViewController: SettingsDelegate{
         dateYearAgoForNetwork = dateFormater.string(from: dateYearAgo)
         
         selectedRover = selectedRoverName
-        print("SELECTED ROVER IS: \(selectedRover)")
-        roverManager.fetchURL(roverName: selectedRover, earthDate: dateYearAgoForNetwork)
+        print("SELECTED ROVER IS: \(selectedRoverName)")
+        
+        
+        
+        roverManager.getData(roverName: selectedRoverName, earthDate: dateYearAgoForNetwork) { [weak self] (roversArray, error) in
+            self?.updateUI(roversArray: roversArray)
+        }
+        
         DispatchQueue.main.async {
             self.roverName.text = selectedRoverName
-            self.camsTableView.reloadData()
+            print("LABEL SHOULD BE: \(selectedRoverName)")
         }
 
     }
-}
-
-// MARK: RoverManagerProtocol
-extension MainViewController: RoverManagerDelegate{
-    func didUpdateRoverInfo(_ roverManager: RoverManager, roversArray: [RoverModel?]) {
-        
-        camsInfoArray = roversArray
-        createCamsModelDict(camsInfoArray: camsInfoArray)
-        
-        
-        DispatchQueue.main.async {
-            self.configureTableView()
-            self.configureView()
-            self.camsTableView.reloadData()
-            print("DATA RLOADED")
-        }
-    }
-    
 }

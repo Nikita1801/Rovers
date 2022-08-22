@@ -68,7 +68,6 @@
 				6DBDBFB0064ED7D92EEC43BE /* Pods-Rovers.debug.xcconfig */,
 				93A8CF654F328EB2EC457946 /* Pods-Rovers.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
