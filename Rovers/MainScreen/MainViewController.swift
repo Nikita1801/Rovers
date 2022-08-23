@@ -158,6 +158,7 @@ final class MainViewController: UIViewController {
     
 }
 
+// MARK: tableView extension
 extension MainViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -175,8 +176,17 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource{
         
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
+        return nil
+    }
 }
 
+// MARK: extension MainViewController
 private extension MainViewController{
     
     // Проверить обновляется ли UI
@@ -216,19 +226,6 @@ private extension MainViewController{
             self?.updateUI(roversArray: roversArray)
         }
     }
-    
-//    func updateUI(roversArray: [RoverModel?]){
-//
-//        camsInfoArray = roversArray
-//        createCamsModelDict(camsInfoArray: camsInfoArray)
-//
-//
-//        DispatchQueue.main.async {
-//            self.camsTableView.reloadData()
-//            print("DATA RLOADED")
-//        }
-//
-//    }
     
     func configureView(){
         view.backgroundColor = .white
